@@ -1,0 +1,11 @@
+curl -X GET http://localhost:3000/logout
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /logout</pre>
+</body>
+</html>
