@@ -1,0 +1,94 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6f9;
+  color: #333;
+}
+
+header {
+  background-color: #1a252f;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+main {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.card, .review-card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.review-header {
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.car-info {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.review-text {
+  font-style: italic;
+  color: #444;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.85em;
+  margin-top: 10px;
+}
+
+.badge.positive {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.badge.negative {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.badge.neutral {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+button {
+  padding: 10px 15px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.btn-back {
+  background-color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.btn-back:hover {
+  background-color: #5a6268;
+}
+
+.error {
+  color: #dc3545;
+}
