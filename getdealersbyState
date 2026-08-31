@@ -1,0 +1,2 @@
+curl -X GET http://localhost:3000/fetchDealers/Kansas
+[{"id":4,"name":"Wichita Auto Center","city":"Wichita","state":"Kansas","address":"555 Sunflower Rd","zip":"67201"}]
