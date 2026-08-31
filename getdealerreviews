@@ -1,0 +1,2 @@
+curl -X GET http://localhost:3000/fetchReviews/dealer/1
+[{"id":1,"dealerId":1,"name":"Alice Smith","review":"Great customer service and fast delivery! Very happy with my purchase.","car_make":"Toyota","car_model":"Camry","car_year":2022},{"id":2,"dealerId":1,"name":"Bob Jones","review":"The buying process was terrible, slow, and full of unexpected fees.","car_make":"Honda","car_model":"Civic","car_year":2021}]
