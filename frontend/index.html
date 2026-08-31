@@ -1,202 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dealer Evaluation Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f4f7f6;
-            color: #333;
-        }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #0f62fe;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-        }
-        select {
-            width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        .results-box {
-            margin-top: 25px;
-            padding: 20px;
-            background: #eef2fe;
-            border-left: 4px solid #0f62fe;
-            border-radius: 4px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: #ffffff;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #0f62fe;
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>National Car Dealership Portal</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <h1>🚗 Car Dealerships Portal</h1>
+  </header>
+  
+  <main>
+    <!-- Dealership View -->
+    <section id="dealer-section">
+      <h2>Select a Dealership</h2>
+      <div id="dealers-container">Loading dealerships...</div>
+    </section>
 
-<div class="container">
-    <h1>Dealer Evaluation Portal</h1>
-    
-    <!-- Step 1: Product Dropdown -->
-    <div class="form-group">
-        <label for="productSelect">Select a Product:</label>
-        <select id="productSelect" onchange="onProductChange()">
-            <option value="">-- Select Product --</option>
-        </select>
-    </div>
+    <!-- Reviews View (Hidden by default) -->
+    <section id="review-section" style="display: none;">
+      <button class="btn-back" onclick="showDealers()">← Back to Dealerships</button>
+      <h2 id="dealer-title"></h2>
+      <h3>Customer Reviews</h3>
+      <div id="reviews-container">Loading reviews...</div>
+    </section>
+  </main>
 
-    <!-- Step 2: Dealer Dropdown -->
-    <div class="form-group" id="dealerGroup" style="display: none;">
-        <label for="dealerSelect">Select Dealer:</label>
-        <select id="dealerSelect" onchange="onDealerChange()">
-            <option value="">-- Select Dealer --</option>
-            <option value="all">All Dealers</option>
-        </select>
-    </div>
-
-    <!-- Results Display Section -->
-    <div class="results-box" id="resultsBox" style="display: none;">
-        <h3 style="margin-top: 0;">Pricing Information</h3>
-        <div id="pricingContent"></div>
-    </div>
-</div>
-
-<script>
-    // =========================================================================
-    // CODESPACE API ENDPOINTS (BASE DOMAINS WITHOUT PATH SUFFIXES)
-    // =========================================================================
-    const PRODUCT_SERVICE_URL = "https://bug-free-dollop-5g7q5qvqr6v34xj6-5000.app.github.dev";
-    const DEALER_SERVICE_URL = "https://bug-free-dollop-5g7q5qvqr6v34xj6-3000.app.github.dev";
-    // =========================================================================
-
-    let currentDealers = [];
-
-    // Preload products on page load
-    window.onload = function() {
-        // Strip trailing slash if present
-        const baseUrl = PRODUCT_SERVICE_URL.replace(/\/+$/, '');
-        const targetUrl = baseUrl.endsWith('/products') ? baseUrl : `${baseUrl}/products`;
-
-        fetch(targetUrl)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                const select = document.getElementById('productSelect');
-                select.innerHTML = '<option value="">-- Select Product --</option>';
-                
-                const productList = data.products || data;
-                if (Array.isArray(productList)) {
-                    productList.forEach(p => {
-                        const opt = document.createElement('option');
-                        opt.value = p.id;
-                        opt.textContent = `${p.name} (${p.category})`;
-                        select.appendChild(opt);
-                    });
-                }
-            })
-            .catch(err => console.error("Error fetching products:", err));
-    };
-
-    function onProductChange() {
-        const productId = document.getElementById('productSelect').value;
-        const dealerGroup = document.getElementById('dealerGroup');
-        const dealerSelect = document.getElementById('dealerSelect');
-        const resultsBox = document.getElementById('resultsBox');
-        
-        if (!productId) {
-            dealerGroup.style.display = 'none';
-            resultsBox.style.display = 'none';
-            return;
-        }
-
-        // Strip trailing slash if present
-        const baseUrl = DEALER_SERVICE_URL.replace(/\/+$/, '');
-        const targetUrl = `${baseUrl}/dealer-pricing?productId=${productId}`;
-
-        fetch(targetUrl)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-                return res.json();
-            })
-            .then(data => {
-                currentDealers = data.dealers || data;
-                dealerSelect.innerHTML = '<option value="">-- Select Dealer --</option><option value="all">All Dealers</option>';
-                
-                if (Array.isArray(currentDealers)) {
-                    currentDealers.forEach((d, idx) => {
-                        const opt = document.createElement('option');
-                        opt.value = idx;
-                        opt.textContent = d.dealerName;
-                        dealerSelect.appendChild(opt);
-                    });
-                }
-
-                dealerGroup.style.display = 'block';
-                resultsBox.style.display = 'none';
-            })
-            .catch(err => console.error("Error fetching dealers:", err));
-    }
-
-    function onDealerChange() {
-        const val = document.getElementById('dealerSelect').value;
-        const resultsBox = document.getElementById('resultsBox');
-        const content = document.getElementById('pricingContent');
-
-        if (val === "") {
-            resultsBox.style.display = 'none';
-            return;
-        }
-
-        resultsBox.style.display = 'block';
-
-        if (val === "all") {
-            let html = `<table><tr><th>Dealer Name</th><th>Price ($)</th></tr>`;
-            currentDealers.forEach(d => {
-                html += `<tr><td>${d.dealerName}</td><td>$${Number(d.price).toFixed(2)}</td></tr>`;
-            });
-            html += `</table>`;
-            content.innerHTML = html;
-        } else {
-            const selectedDealer = currentDealers[val];
-            content.innerHTML = `<p><strong>Dealer:</strong> ${selectedDealer.dealerName}</p>
-                                 <p><strong>Price:</strong> $${Number(selectedDealer.price).toFixed(2)}</p>`;
-        }
-    }
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>

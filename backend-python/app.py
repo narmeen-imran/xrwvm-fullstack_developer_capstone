@@ -1,31 +1,36 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+# Download VADER lexicon for sentiment analysis
+nltk.download('vader_lexicon', quiet=True)
+sia = SentimentIntensityAnalyzer()
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS so frontend can communicate with backend
+CORS(app)
 
-PRODUCTS = [
-    {"id": 1, "name": "Sedan Car Engine Model A", "category": "Engine Parts"},
-    {"id": 2, "name": "Brake Rotor Set Front", "category": "Braking System"},
-    {"id": 3, "name": "Synthetic Motor Oil 5W-30", "category": "Fluids"},
-    {"id": 4, "name": "All-Season Radial Tires", "category": "Tires"}
-]
-
-# Root endpoint to prevent "Not Found" error
 @app.route('/', methods=['GET'])
 def home():
-    return jsonify({"message": "Product Details Microservice is active and running!"})
+    return jsonify({"status": "Python Sentiment Microservice Running"})
 
-@app.route('/products', methods=['GET'])
-def get_products():
-    return jsonify({"status": "success", "products": PRODUCTS})
-
-@app.route('/products/<int:product_id>', methods=['GET'])
-def get_product(product_id):
-    product = next((p for p in PRODUCTS if p["id"] == product_id), None)
-    if product:
-        return jsonify({"status": "success", "product": product})
-    return jsonify({"status": "error", "message": "Product not found"}), 404
+@app.route('/analyze/<path:text>', methods=['GET'])
+def analyze_sentiment(text):
+    scores = sia.polarity_scores(text)
+    compound = scores['compound']
+    
+    if compound >= 0.05:
+        sentiment = "positive"
+    elif compound <= -0.05:
+        sentiment = "negative"
+    else:
+        sentiment = "neutral"
+        
+    return jsonify({
+        "sentiment": sentiment,
+        "label": sentiment.upper(),
+        "score": compound
+    })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
