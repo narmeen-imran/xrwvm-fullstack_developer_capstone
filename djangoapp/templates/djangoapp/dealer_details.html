@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ dealer.name }} - Details & Reviews</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Dealerships App</a>
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated %}
+                <span class="navbar-text me-3 text-white">Welcome, {{ user.username }}</span>
+                <a class="btn btn-outline-light" href="/admin/logout/">Logout</a>
+                {% else %}
+                <a class="btn btn-outline-light me-2" href="/admin/login/">Login</a>
+                <a class="btn btn-primary" href="#">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <a href="/" class="btn btn-secondary mb-3">&larr; Back to Dealerships</a>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3>{{ dealer.name }}</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>City:</strong> {{ dealer.city }}</p>
+                <p><strong>State:</strong> {{ dealer.state }}</p>
+                <p><strong>Address:</strong> {{ dealer.address }}</p>
+                <p><strong>Zip Code:</strong> {{ dealer.zip }}</p>
+            </div>
+        </div>
+
+        <h4>Customer Reviews</h4>
+        <div class="row mt-3">
+            {% for review in reviews %}
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ review.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Car: {{ review.car }}</h6>
+                        <p class="card-text">"{{ review.review }}"</p>
+                        <span class="badge bg-success">{{ review.sentiment }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>No reviews available for this dealership yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
