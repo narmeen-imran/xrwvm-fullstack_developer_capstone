@@ -1,0 +1,11 @@
+curl -X GET http://localhost:3000/get_cars
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /get_cars</pre>
+</body>
+</html>

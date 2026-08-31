@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
   res.json({ message: "Dealer Pricing Microservice is active and running!" });
 });
 
-// Mock Data for Dealerships
+// Mock Data for Dealerships (Includes Kansas for Task 11)
 const dealers = [
   {
     id: 1,
@@ -37,6 +37,14 @@ const dealers = [
     state: "IL",
     address: "789 Lakefront Dr",
     zip: "60601"
+  },
+  {
+    id: 4,
+    name: "Wichita Auto Center",
+    city: "Wichita",
+    state: "Kansas",
+    address: "555 Sunflower Rd",
+    zip: "67201"
   }
 ];
 
@@ -76,7 +84,16 @@ app.get('/fetchDealers', (req, res) => {
   res.json(dealers);
 });
 
-// Endpoint: Fetch single dealership by ID
+// Endpoint: Fetch dealerships filtered by State (Task 11)
+app.get('/fetchDealers/:state', (req, res) => {
+  const stateParam = req.params.state.toLowerCase();
+  const filteredDealers = dealers.filter(d => 
+    d.state.toLowerCase() === stateParam || (stateParam === 'kansas' && d.state.toLowerCase() === 'ks')
+  );
+  res.json(filteredDealers);
+});
+
+// Endpoint: Fetch single dealership by ID (Task 10)
 app.get('/fetchDealer/:id', (req, res) => {
   const dealer = dealers.find(d => d.id === parseInt(req.params.id));
   if (dealer) {
@@ -86,7 +103,7 @@ app.get('/fetchDealer/:id', (req, res) => {
   }
 });
 
-// Endpoint: Fetch reviews for a specific dealership
+// Endpoint: Fetch reviews for a specific dealership (Task 8)
 app.get('/fetchReviews/dealer/:id', (req, res) => {
   const dealerReviews = reviews.filter(r => r.dealerId === parseInt(req.params.id));
   res.json(dealerReviews);
@@ -100,6 +117,21 @@ app.post('/insertReview', (req, res) => {
   };
   reviews.push(newReview);
   res.status(201).json({ status: "Review added successfully", review: newReview });
+});
+
+// Endpoint: Login route (Task 5)
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username && password) {
+    res.json({ status: "Authenticated", username: username, message: "Login successful" });
+  } else {
+    res.status(400).json({ error: "Invalid credentials" });
+  }
+});
+
+// Endpoint: Logout route (Task 6)
+app.get('/logout', (req, res) => {
+  res.json({ status: "Logged out", message: "User successfully logged out" });
 });
 
 app.listen(PORT, () => {
